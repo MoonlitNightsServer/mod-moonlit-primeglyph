@@ -30,7 +30,7 @@ ROOT = next(p for p in Path(__file__).resolve().parents if (p / "tools" / "mn.py
 sys.path.insert(0, str(ROOT / "tools" / "phase2"))
 import effective as ef  # noqa: E402
 
-EXCLUDED_CLASSES = {2: "Paladin", 3: "Hunter", 5: "Priest", 7: "Shaman"}        # Blessings classes (Favors replace the Prime glyph)
+EXCLUDED_CLASSES = {2: "Paladin", 3: "Hunter", 5: "Priest", 7: "Shaman", 8: "Mage"}        # Blessings classes (Favors replace the Prime glyph)
 APPLY_GLYPH = 74
 OUT = ROOT / "lua_scripts" / "primeglyph" / "primeglyph_data.lua"
 
