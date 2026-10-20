@@ -16,7 +16,7 @@ How the facts chain together (all read-only):
        field 1 = the passive aura, field 2 = TypeFlags (0 Major, 1 Minor, 2 Prime), field 3 = SpellIcon id
     -> SpellIcon.dbc: the rune texture path.
 
-Classes listed in EXCLUDED_CLASSES are left out: Paladin (2), Shaman (7) and Priest (5) use Moonlit Blessings Favors instead of a Prime glyph.
+Classes listed in EXCLUDED_CLASSES are left out: Paladin (2), Hunter (3), Shaman (7) and Priest (5) use Moonlit Blessings Favors instead of a Prime glyph.
 When another class gets Blessings, add it to the list here AND to the same list in lua_scripts/primeglyph/primeglyph_core.lua and
 client-addon/MoonlitPrimeGlyph/MoonlitPrimeGlyph.lua.
 
@@ -30,7 +30,7 @@ ROOT = next(p for p in Path(__file__).resolve().parents if (p / "tools" / "mn.py
 sys.path.insert(0, str(ROOT / "tools" / "phase2"))
 import effective as ef  # noqa: E402
 
-EXCLUDED_CLASSES = {2: "Paladin", 5: "Priest", 7: "Shaman"}        # Blessings classes (Favors replace the Prime glyph)
+EXCLUDED_CLASSES = {2: "Paladin", 3: "Hunter", 5: "Priest", 7: "Shaman"}        # Blessings classes (Favors replace the Prime glyph)
 APPLY_GLYPH = 74
 OUT = ROOT / "lua_scripts" / "primeglyph" / "primeglyph_data.lua"
 
