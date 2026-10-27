@@ -5,6 +5,8 @@ Writes <repo>/lua_scripts/primeglyph/primeglyph_data.lua (the authoritative Lua 
 
   PRIME_GLYPHS[itemEntry] = { glyph = GlyphProperties.ID, spell = the glyph's passive aura, use = the item's own use spell,
                               icon = SpellIcon path of the rune, class = class id, minor = true|nil, prime = true|nil, name = "..." }
+                              extra = { aura, ... } and removes = { spell, ... } only when the glyph's Favor has more than its first aura / takes spells away
+                              (see FAVORS below)
   PRIME_GLYPH_ITEMS   = { item, ... }        the Prime-type glyphs (GlyphProperties TypeFlags 2): none in gen 2 yet
   PRIME_GLYPH_BY_USE[useSpell] = item        for the right-click -> click-the-socket flow
 
@@ -23,6 +25,7 @@ client-addon/MoonlitPrimeGlyph/MoonlitPrimeGlyph.lua.
 Run: python -I tools/build_primeglyph_data.py < /dev/null        (database up, SELECT only)
 ~Moonlit Nights Team
 """
+import re
 import sys
 from pathlib import Path
 
@@ -33,6 +36,20 @@ import effective as ef  # noqa: E402
 EXCLUDED_CLASSES = {}        # 2026-10-26: Blessings are off, every class gets the Prime socket (put a class back here when it uses Blessings Favors)
 APPLY_GLYPH = 74
 OUT = ROOT / "lua_scripts" / "primeglyph" / "primeglyph_data.lua"
+BLESSINGS_DATA = ROOT / "lua_scripts" / "moonlit_blessings" / "data.lua"
+FAVOR_RE = re.compile(r"removes = \{([^}]*)\},\s*auras = \{([^}]*)\}")
+
+
+def favors():
+    """First aura of a Favor -> (extra auras, removed spells), read from the generated Blessings data. A Prime glyph carries its Favor whole:
+    the glyph's GlyphProperties.SpellID is the Favor's first aura, the rest of the Favor rides along."""
+    out = {}
+    for m in FAVOR_RE.finditer(BLESSINGS_DATA.read_text(encoding="utf-8")):
+        removes = [int(v) for v in m.group(1).replace(" ", "").split(",") if v]
+        auras = [int(v) for v in m.group(2).replace(" ", "").split(",") if v]
+        if auras:
+            out.setdefault(auras[0], (auras[1:], removes))
+    return out
 
 
 def lua_str(s):
@@ -41,6 +58,7 @@ def lua_str(s):
 
 def main():
     g2 = ef.gen2()
+    fav = favors()
     cols = [c[0] for c in g2.cols("Spell")]
     ix = {n: i for i, n in enumerate(cols)}
     gp, gp_strs, _ = ef.read_dbc(ef.GEN2_DBC / "GlyphProperties.dbc")
@@ -79,7 +97,9 @@ def main():
     ]
     for e, g, spell, cls, gtype, name, use, icon in sorted(out):
         kind = {1: ", minor = true", 2: ", prime = true"}.get(gtype, "")
-        lines.append(f"  [{e}] = {{ glyph = {g}, spell = {spell}, use = {use}, class = {cls}{kind}, icon = {lua_str(icon)}, name = {lua_str(name)} }},")
+        extra, removes = fav.get(spell, ([], []))
+        kit = (f", extra = {{ {', '.join(map(str, extra))} }}" if extra else "") + (f", removes = {{ {', '.join(map(str, removes))} }}" if removes else "")
+        lines.append(f"  [{e}] = {{ glyph = {g}, spell = {spell}, use = {use}, class = {cls}{kind}{kit}, icon = {lua_str(icon)}, name = {lua_str(name)} }},")
     lines += [
         "}",
         "PRIME_GLYPH_ITEMS = { %s }" % ", ".join(str(o[0]) for o in sorted(out) if o[4] == 2),

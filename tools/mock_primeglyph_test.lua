@@ -3,7 +3,17 @@
 local reg, db, sent = {}, {}, {}
 function RegisterServerEvent(e, f) reg["s" .. e] = f end
 function RegisterPlayerEvent(e, f) reg["p" .. e] = f end
+local removedDb = {}      -- moonlit_prime_glyph_removed: guid:spell
 function CharDBExecute(sql)
+    if sql:find("moonlit_prime_glyph_removed", 1, true) then
+        local g, sp = sql:match("VALUES %((%d+), (%d+)%)")
+        if g then removedDb[g .. ":" .. sp] = true return end
+        g, sp = sql:match("guid = (%d+) AND spell = (%d+)")
+        if g then removedDb[g .. ":" .. sp] = nil return end
+        g = sql:match("guid = (%d+)$")
+        if g then for k in pairs(removedDb) do if k:match("^" .. g .. ":") then removedDb[k] = nil end end return end
+        error(sql)
+    end
     local g, sp, it = sql:match("VALUES %((%d+), (%d+), (%d+)%)")
     if g then db[g .. ":" .. sp] = tonumber(it) return end
     g, sp = sql:match("guid = (%d+) AND spec = (%d+)")
@@ -13,6 +23,13 @@ function CharDBExecute(sql)
     error(sql)
 end
 function CharDBQuery(sql)
+    if sql:find("moonlit_prime_glyph_removed", 1, true) then
+        local g, rows = sql:match("guid = (%d+)"), {}
+        for k in pairs(removedDb) do local kg, ks = k:match("(%d+):(%d+)") if kg == g then rows[#rows + 1] = tonumber(ks) end end
+        if #rows == 0 then return nil end
+        local i = 1
+        return { GetUInt32 = function() return rows[i] end, NextRow = function() i = i + 1 return i <= #rows end }
+    end
     local g = sql:match("guid = (%d+)")
     local rows = {}
     for k, v in pairs(db) do local kg, ks = k:match("(%d+):(%d+)") if kg == g then rows[#rows + 1] = { tonumber(ks), v } end end
@@ -27,7 +44,7 @@ dofile("lua_scripts/primeglyph/primeglyph_core.lua")
 print = _print
 
 local function P(guid, class, level)
-    local p = { guid = guid, class = class, level = level, spec = 0, auras = {}, glyphs = {}, bag = {}, ev = {} }
+    local p = { guid = guid, class = class, level = level, spec = 0, auras = {}, spells = {}, glyphs = {}, bag = {}, ev = {} }
     local M = {}
     function M:GetGUIDLow() return self.guid end
     function M:GetName() return "P" end
@@ -38,6 +55,9 @@ local function P(guid, class, level)
     function M:HasItem(e, c) return (self.bag[e] or 0) >= c end
     function M:RemoveItem(e, c) self.bag[e] = self.bag[e] - c end
     function M:HasAura(s) return self.auras[s] == true end
+    function M:HasSpell(s) return self.spells[s] == true end
+    function M:LearnSpell(s) self.spells[s] = true end
+    function M:RemoveSpell(s) self.spells[s] = nil end
     function M:RemoveAura(s) self.auras[s] = nil end
     function M:CastSpell(t, s, trig)
         if s == 5800010 then self.casting = (self.casting or 0) + 1 return end   -- inscription cast bar
@@ -162,6 +182,19 @@ ok("logout clears the pending cast", pe2.bag[MAJ] == 1)
 local pf = P(16, WARRIOR, 1); pf.bag[MAJ] = 1; reg.p3(3, pf)
 say(pf, "USE:" .. MAJ_USE); done(pf, 5800010)
 ok("USE casts then inscribes", pf.casting == 1 and pf.auras[MAJ_AURA])
+-- a Prime glyph with a kit: extra auras, and spells taken away and given back exactly as recorded
+local KIT, KIT_AURA, KIT_EXTRA, KIT_USE, GONE = 99998, 99980, 99981, 99982, 99983
+PRIME_GLYPHS[KIT] = { glyph = 9998, spell = KIT_AURA, extra = { KIT_EXTRA }, removes = { GONE, GONE + 1 }, use = KIT_USE, class = WARRIOR, prime = true, icon = "I", name = "Test Kit" }
+PRIME_GLYPH_BY_USE[KIT_USE] = KIT
+local pk = P(20, WARRIOR, 1); pk.bag[KIT] = 1; pk.spells[GONE] = true; reg.p3(3, pk)      -- knows GONE but not GONE + 1
+say(pk, "SET:" .. KIT)
+ok("kit: both auras", pk.auras[KIT_AURA] and pk.auras[KIT_EXTRA])
+ok("kit: known spell taken, recorded", not pk.spells[GONE] and removedDb["20:" .. GONE] and not removedDb["20:" .. (GONE + 1)])
+reg.p4(4, pk); reg.p3(3, pk)                                                           -- relog: the record is read back
+pk.spec = 1
+reg.p13(13, pk, 1)                                                                      -- the other spec has no glyph
+ok("kit: other spec gives the spell back", pk.spells[GONE] and not pk.spells[GONE + 1] and not removedDb["20:" .. GONE])
+ok("kit: other spec drops the auras", not pk.auras[KIT_AURA] and not pk.auras[KIT_EXTRA])
 -- garbage
 ok("garbage swallowed", say(pr4, "SET:abc") == false)
 reg.p2(2, 9); ok("delete", db["9:0"] == nil)
