@@ -9,6 +9,7 @@ Writes one data/sql/db-world/zz_moonlit_primeglyph_<n>_*.sql per glyph. Four rec
   item_template        <id>   Glyph of Smite (42416) cloned, renamed, use spell <id>, RequiredLevel 1
 
   Atonement      priest block 1,610,000: item and installer 1,610,020, GlyphProperties 16,100, aura 1,610,010 (zz_..._20_atonement_glyph.sql)
+  Spellstriker   mage block 1,440,100 (Spellblade recipes): item and installer 1,440,290, GlyphProperties 14,401, aura 1,440,270 (zz_..._22_spellstriker_glyph.sql)
   Void Lasher    priest block 1,630,000: item and installer 1,630,100, GlyphProperties 16,300, aura 1,630,070 (zz_..._21_void_lasher_glyph.sql)
                  (the glyph also needs the wand passive 1,630,080 and the loss of Mind Flay and Mind Sear: those come from the Favor data, see
                  tools/build_primeglyph_data.py)
@@ -35,11 +36,13 @@ ICON = 3122
 DONOR_SPELL, DONOR_ITEM = 56182, 42416
 OUT_DIR = MODULE / "data" / "sql" / "db-world"
 GLYPHS = [
-    dict(item=1610020, glyph=16100, aura=1610010, name="Glyph of Atonement", file="zz_moonlit_primeglyph_20_atonement_glyph.sql",
+    dict(cls=5, item=1610020, glyph=16100, aura=1610010, name="Glyph of Atonement", file="zz_moonlit_primeglyph_20_atonement_glyph.sql",
          text="Your Smite and Holy Fire deal 50% less damage, but heal a nearby injured ally for 200% of the damage dealt."),
-    dict(item=1630100, glyph=16300, aura=1630070, name="Glyph of the Void Lasher", file="zz_moonlit_primeglyph_21_void_lasher_glyph.sql",
+    dict(cls=5, item=1630100, glyph=16300, aura=1630070, name="Glyph of the Void Lasher", file="zz_moonlit_primeglyph_21_void_lasher_glyph.sql",
          text="You lose Mind Flay and Mind Sear. Spell haste becomes attack speed, and each different damage over time you keep up calls a Tentacle "
               "of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast."),
+    dict(cls=8, item=1440290, glyph=14401, aura=1440270, name="Glyph of the Spellstriker", file="zz_moonlit_primeglyph_22_spellstriker_glyph.sql",
+         text="You fight in melee: Arcane Blast and Arcane Missiles become weapon and uninterruptible versions, you call melee Mirror Images, and Intellect gives 2 attack power each. You lose Mana Ward."),
 ]
 
 
@@ -50,7 +53,7 @@ def build(g):
     ix = k.IDX
     assert row[ix["Effect_1"]] == 74, "donor effect 1 is not APPLY_GLYPH"
     row[ix["EffectMiscValue_1"]] = GLYPH_ID
-    assert row[0] == SPELL_ID and all(ord(c) < 128 for c in NAME + TEXT)
+    assert row[0] == SPELL_ID and all(ord(c) < 128 and c != "'" for c in NAME + TEXT) and len(TEXT) <= 255
     if not OUT.exists():        # first generation: the IDs must be free (regenerating an applied file finds its own rows)
         assert SPELL_ID not in k.g2.ids("Spell"), f"spell {SPELL_ID} already exists in the binary DBC or the live overlay"
         assert not k.g2.row("Item", ITEM_ID), f"item {ITEM_ID} already exists in Item.dbc or item_dbc"
@@ -59,6 +62,8 @@ def build(g):
     donor = k.g2.row("Item", DONOR_ITEM)
     assert donor and donor[1] == 16 and donor[2] == 5, "Glyph of Smite Item.dbc row not found"
     item_vals = [ITEM_ID] + [int(v) for v in donor[1:]]
+    CLS = g["cls"]
+    item_vals[2] = CLS                  # Item.dbc SubclassID: glyph subclass = class id
 
     cols = ", ".join(f"`{c[0]}`" for c in k.COLS)
     vals = ", ".join(gs.q(v, k.COLS[i][1]) for i, v in enumerate(row))
@@ -77,7 +82,7 @@ INSERT INTO `item_dbc` (`ID`, `ClassID`, `SubclassID`, `Sound_Override_Subclassi
 
 DELETE FROM `item_template` WHERE `entry` = {ITEM_ID};
 CREATE TEMPORARY TABLE `mn_glyph_clone` AS SELECT * FROM `item_template` WHERE `entry` = {DONOR_ITEM};
-UPDATE `mn_glyph_clone` SET `entry` = {ITEM_ID}, `name` = '{NAME}', `description` = '{TEXT}', `spellid_1` = {SPELL_ID}, `RequiredLevel` = 1;
+UPDATE `mn_glyph_clone` SET `entry` = {ITEM_ID}, `name` = '{NAME}', `description` = '{TEXT}', `spellid_1` = {SPELL_ID}, `RequiredLevel` = 1, `subclass` = {CLS}, `AllowableClass` = {1 << (CLS - 1)};
 INSERT INTO `item_template` SELECT * FROM `mn_glyph_clone`;
 DROP TEMPORARY TABLE `mn_glyph_clone`;
 """

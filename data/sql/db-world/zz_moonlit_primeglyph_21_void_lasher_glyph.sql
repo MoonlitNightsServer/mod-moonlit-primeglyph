@@ -13,6 +13,6 @@ INSERT INTO `item_dbc` (`ID`, `ClassID`, `SubclassID`, `Sound_Override_Subclassi
 
 DELETE FROM `item_template` WHERE `entry` = 1630100;
 CREATE TEMPORARY TABLE `mn_glyph_clone` AS SELECT * FROM `item_template` WHERE `entry` = 42416;
-UPDATE `mn_glyph_clone` SET `entry` = 1630100, `name` = 'Glyph of the Void Lasher', `description` = 'You lose Mind Flay and Mind Sear. Spell haste becomes attack speed, and each different damage over time you keep up calls a Tentacle of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast.', `spellid_1` = 1630100, `RequiredLevel` = 1;
+UPDATE `mn_glyph_clone` SET `entry` = 1630100, `name` = 'Glyph of the Void Lasher', `description` = 'You lose Mind Flay and Mind Sear. Spell haste becomes attack speed, and each different damage over time you keep up calls a Tentacle of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast.', `spellid_1` = 1630100, `RequiredLevel` = 1, `subclass` = 5, `AllowableClass` = 16;
 INSERT INTO `item_template` SELECT * FROM `mn_glyph_clone`;
 DROP TEMPORARY TABLE `mn_glyph_clone`;

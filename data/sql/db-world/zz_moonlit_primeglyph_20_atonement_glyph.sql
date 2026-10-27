@@ -13,6 +13,6 @@ INSERT INTO `item_dbc` (`ID`, `ClassID`, `SubclassID`, `Sound_Override_Subclassi
 
 DELETE FROM `item_template` WHERE `entry` = 1610020;
 CREATE TEMPORARY TABLE `mn_glyph_clone` AS SELECT * FROM `item_template` WHERE `entry` = 42416;
-UPDATE `mn_glyph_clone` SET `entry` = 1610020, `name` = 'Glyph of Atonement', `description` = 'Your Smite and Holy Fire deal 50% less damage, but heal a nearby injured ally for 200% of the damage dealt.', `spellid_1` = 1610020, `RequiredLevel` = 1;
+UPDATE `mn_glyph_clone` SET `entry` = 1610020, `name` = 'Glyph of Atonement', `description` = 'Your Smite and Holy Fire deal 50% less damage, but heal a nearby injured ally for 200% of the damage dealt.', `spellid_1` = 1610020, `RequiredLevel` = 1, `subclass` = 5, `AllowableClass` = 16;
 INSERT INTO `item_template` SELECT * FROM `mn_glyph_clone`;
 DROP TEMPORARY TABLE `mn_glyph_clone`;
