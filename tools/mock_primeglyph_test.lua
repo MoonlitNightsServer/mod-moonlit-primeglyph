@@ -87,9 +87,10 @@ PRIME_GLYPH_BY_USE[PRI_USE] = PRI
 local n, byClass = 0, {}
 for e, g in pairs(PRIME_GLYPHS) do if e ~= PRI then n = n + 1; byClass[g.class] = true end end
 ok("data has glyphs", n > 200)
-ok("no Priest or Shaman rows", not byClass[PRIEST] and not byClass[SHAMAN])
+ok("data has Priest and Mage rows (generation 2)", byClass[PRIEST] and byClass[8])
 
 PrimeGlyph.CONFIG.CAST_SPELL = 0       -- the rules first, without the cast bar
+PrimeGlyph.CONFIG.REQUIRE_ITEM = true  -- and with the item rules (the shipped default is the free library, tested at the end)
 local pr = P(7, WARRIOR, 0); pr.bag[MAJ] = 1; reg.p3(3, pr)
 say(pr, "SET:" .. MAJ); ok("level gate", sent[#sent] == "S:0:0:level:0:" and not pr.auras[MAJ_AURA])
 pr.level = 1
@@ -137,12 +138,14 @@ PrimeGlyph.CONFIG.ALLOW_MAJOR = true
 PrimeGlyph.CONFIG.ALLOW_MINOR = false
 say(pr6, "SET:" .. MIN); ok("minor refused when off", sent[#sent]:find(":minor:", 1, true) ~= nil and pr6.bag[MIN] == 1)
 PrimeGlyph.CONFIG.ALLOW_MINOR = true
+PrimeGlyph.CONFIG.EXCLUDED_CLASSES = { [5] = true, [7] = true }   -- the Blessings classes of generation 1 (empty in generation 2)
 -- Shaman and Priest use Favors: refused, nothing stored, no aura, the status says the socket is off
 local ps = P(20, SHAMAN, 60); ps.bag[MAJ] = 1; reg.p3(3, ps)
 say(ps, "SET:" .. MAJ); ok("shaman refused", sent[#sent]:match("^S:0:0:blessing:0:") ~= nil and ps.bag[MAJ] == 1 and db["20:0"] == nil)
 local pp = P(21, PRIEST, 60); pp.bag[MAJ] = 1; reg.p3(3, pp)
 say(pp, "SET:" .. MAJ); ok("priest refused", sent[#sent]:match("^S:0:0:blessing:0:") ~= nil and not pp.auras[MAJ_AURA])
 say(pp, "Q"); ok("priest Q says off", sent[#sent]:match("^S:0:0:blessing:") ~= nil)
+PrimeGlyph.CONFIG.EXCLUDED_CLASSES = {}
 -- rev 5: the inscription CASTS; nothing happens until the cast completes
 PrimeGlyph.CONFIG.CAST_SPELL = 5800010
 local function done(p, id) reg.p5(5, p, { GetEntry = function() return id end }, false) end
@@ -187,10 +190,11 @@ local KIT, KIT_AURA, KIT_EXTRA, KIT_USE, GONE = 99998, 99980, 99981, 99982, 9998
 PRIME_GLYPHS[KIT] = { glyph = 9998, spell = KIT_AURA, extra = { KIT_EXTRA }, removes = { GONE, GONE + 1 }, use = KIT_USE, class = WARRIOR, prime = true, icon = "I", name = "Test Kit" }
 PRIME_GLYPH_BY_USE[KIT_USE] = KIT
 local pk = P(20, WARRIOR, 1); pk.bag[KIT] = 1; pk.spells[GONE] = true; reg.p3(3, pk)      -- knows GONE but not GONE + 1
-say(pk, "SET:" .. KIT)
+say(pk, "SET:" .. KIT); done(pk, 5800010)      -- the inscription lands when the cast completes
 ok("kit: both auras", pk.auras[KIT_AURA] and pk.auras[KIT_EXTRA])
 ok("kit: known spell taken, recorded", not pk.spells[GONE] and removedDb["20:" .. GONE] and not removedDb["20:" .. (GONE + 1)])
 reg.p4(4, pk); reg.p3(3, pk)                                                           -- relog: the record is read back
+PrimeGlyph.sync(pk)                                                                      -- the login timer (2 s) syncs the kit
 pk.spec = 1
 reg.p13(13, pk, 1)                                                                      -- the other spec has no glyph
 ok("kit: other spec gives the spell back", pk.spells[GONE] and not pk.spells[GONE + 1] and not removedDb["20:" .. GONE])
@@ -198,5 +202,17 @@ ok("kit: other spec drops the auras", not pk.auras[KIT_AURA] and not pk.auras[KI
 -- garbage
 ok("garbage swallowed", say(pr4, "SET:abc") == false)
 reg.p2(2, 9); ok("delete", db["9:0"] == nil)
+-- the shipped model: Prime glyphs are free (no item needed, none consumed), inscribed at once, out of combat
+PrimeGlyph.CONFIG.REQUIRE_ITEM = false
+PrimeGlyph.CONFIG.CAST_SPELL = 0
+local pfree = P(30, WARRIOR, 1); reg.p3(3, pfree)
+say(pfree, "SET:" .. MAJ)
+ok("free: inscribed with no item in the bags", pfree.auras[MAJ_AURA] and db["30:0"] == MAJ)
+local pfree2 = P(31, WARRIOR, 1); pfree2.bag[MAJ] = 1; reg.p3(3, pfree2)
+say(pfree2, "SET:" .. MAJ)
+ok("free: an item in the bags is not consumed", pfree2.auras[MAJ_AURA] and pfree2.bag[MAJ] == 1)
+pfree2.combat = true; say(pfree2, "CLR"); pfree2.combat = false
+PrimeGlyph.CONFIG.REQUIRE_ITEM = true
+
 _print(string.format("mock_primeglyph_test: %d passed, %d failed", pass, fail))
 if fail > 0 then os.exit(1) end
