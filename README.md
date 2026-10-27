@@ -38,7 +38,7 @@ docs/DESIGN.md                      design, what changed from gen 1, limits
   not usable in combat); the glyph goes in, and the item is consumed, when the cast completes. Shift-right-click removes.
 - **Per spec:** each talent spec has its own Prime glyph. A glyph already in one of the six real sockets is refused.
 - **Types:** Major and Minor fit (`ALLOW_MAJOR` / `ALLOW_MINOR` in the Lua core). A Prime-type glyph (GlyphProperties type 2)
-  would always fit; none exist in gen 2.
+  always fits; Glyph of Atonement (item 1,610,020) is the first.
 
 ## Rebuilding the generated files
 

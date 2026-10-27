@@ -30,7 +30,7 @@ ROOT = next(p for p in Path(__file__).resolve().parents if (p / "tools" / "mn.py
 sys.path.insert(0, str(ROOT / "tools" / "phase2"))
 import effective as ef  # noqa: E402
 
-EXCLUDED_CLASSES = {1: "Warrior", 2: "Paladin", 3: "Hunter", 4: "Rogue", 5: "Priest", 6: "Death Knight", 7: "Shaman", 8: "Mage", 9: "Warlock", 11: "Druid"}        # Blessings classes (Favors replace the Prime glyph)
+EXCLUDED_CLASSES = {}        # 2026-10-26: Blessings are off, every class gets the Prime socket (put a class back here when it uses Blessings Favors)
 APPLY_GLYPH = 74
 OUT = ROOT / "lua_scripts" / "primeglyph" / "primeglyph_data.lua"
 
@@ -45,7 +45,8 @@ def main():
     ix = {n: i for i, n in enumerate(cols)}
     gp, gp_strs, _ = ef.read_dbc(ef.GEN2_DBC / "GlyphProperties.dbc")
     si, si_strs, _ = ef.read_dbc(ef.GEN2_DBC / "SpellIcon.dbc")
-    assert not ef.sql("SELECT 1 FROM glyphproperties_dbc LIMIT 1", ef.GEN2_DB), "glyphproperties_dbc now has rows: read them too"
+    for r in ef.sql("SELECT ID, SpellID, GlyphSlotFlags, SpellIconID FROM glyphproperties_dbc", ef.GEN2_DB):      # overlay rows win over the binary
+        gp[int(r[0])] = tuple(int(v) for v in r)
 
     items = ef.sql("SELECT entry, name, subclass, spellid_1 FROM item_template WHERE class = 16 ORDER BY entry", ef.GEN2_DB)
     out, no_spell, no_glyph, excluded = [], [], [], []

@@ -33,10 +33,10 @@ re-checks everything (combat, item, spec) when the cast completes. An interrupte
 | DBC edited by script on both copies | One `spell_dbc` overlay row (the client patch builder reads the live overlay through the manifest) |
 | Glyph items got RequiredLevel from Start Me Up | `zz_moonlit_primeglyph_11_glyph_items.sql` sets class 16 items to RequiredLevel 1 |
 
-## A real Prime-type glyph would need
+## A real Prime-type glyph needs (built for Glyph of Atonement, 2026-10-27)
 A `GlyphProperties` row with TypeFlags 2 (a narrow 16-bit ID: allocate in the 58,000 mirror), added to **both** the server and the
 client copy of `GlyphProperties.dbc` (the `glyphproperties_dbc` overlay table is empty and the build does not write the client copy),
-a passive aura spell, the glyph item and its use spell with `APPLY_GLYPH`. None of this is built.
+a passive aura spell, the glyph item and its use spell with `APPLY_GLYPH`. Built for **Glyph of Atonement** by `tools/gen_atonement_glyph.py` (`zz_moonlit_primeglyph_20_atonement_glyph.sql`): item and installer spell 1,610,020, `glyphproperties_dbc` row 16,100 (type 2, aura 1,610,010 = the Favor of Atonement passive, which is the glyph's whole effect), `item_dbc` row; the client copies come from the overlay tables through `tools/clientpatch/build.py` (GlyphProperties and Item) plus the manifest line for the spell. Every further Prime-type glyph follows the same four records.
 
 ## Known limits (unchanged from gen 1)
 - No real socket: the glyph does not appear in the talent packet, so other players inspecting the character, the armory and addons
