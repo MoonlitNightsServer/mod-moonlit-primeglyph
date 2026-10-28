@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prime-type glyphs (GlyphProperties type 2): Glyph of Atonement and Glyph of the Void Lasher.
+"""Prime-type glyphs (GlyphProperties type 2): Atonement, Void Lasher, Spellstriker and Bound Fiend.
 
 Writes one data/sql/db-world/zz_moonlit_primeglyph_<n>_*.sql per glyph. Four records each, allocated in the registry:
 
@@ -13,6 +13,8 @@ Writes one data/sql/db-world/zz_moonlit_primeglyph_<n>_*.sql per glyph. Four rec
   Void Lasher    priest block 1,630,000: item and installer 1,630,100, GlyphProperties 16,300, aura 1,630,070 (zz_..._21_void_lasher_glyph.sql)
                  (the glyph also needs the wand passive 1,630,080 and the loss of Mind Flay and Mind Sear: those come from the Favor data, see
                  tools/build_primeglyph_data.py)
+  Bound Fiend    priest block 1,630,000: item and installer 1,630,110, GlyphProperties 16,301, aura 1,630,050 (zz_..._23_bound_fiend_glyph.sql)
+                 (the Favor also takes the stock Shadowfiend spell 34433 away: from the Favor data, as for the Void Lasher)
 
 Type 2 matches no real glyph socket (core EffectApplyGlyph and the client both need equal types), so the glyph can only be socketed through the Prime
 socket (lua_scripts/primeglyph). Gen-1 record of Atonement: docs/legacy/gen1-repo/docs/Atonement Project/Ruling_Atonement_Glyph_Build.md.
@@ -41,6 +43,8 @@ GLYPHS = [
     dict(cls=5, item=1630100, glyph=16300, aura=1630070, name="Glyph of the Void Lasher", file="zz_moonlit_primeglyph_21_void_lasher_glyph.sql",
          text="You lose Mind Flay and Mind Sear. Spell haste becomes attack speed, and each different damage over time you keep up calls a Tentacle "
               "of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast."),
+    dict(cls=5, item=1630110, glyph=16301, aura=1630050, name="Glyph of the Bound Fiend", file="zz_moonlit_primeglyph_23_bound_fiend_glyph.sql",
+         text="You keep a permanent Shadowfiend that hits 30% harder, and your Shadow talents feed it. The Shadowfiend no longer returns mana, and you lose the Shadowfiend spell."),
     dict(cls=8, item=1440290, glyph=14401, aura=1440270, name="Glyph of the Spellstriker", file="zz_moonlit_primeglyph_22_spellstriker_glyph.sql",
          text="You fight in melee: Arcane Blast and Arcane Missiles become weapon and uninterruptible versions, you call melee Mirror Images, and Intellect gives 2 attack power each. You lose Mana Ward."),
 ]
