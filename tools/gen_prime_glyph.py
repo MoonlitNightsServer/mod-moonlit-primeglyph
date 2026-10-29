@@ -46,6 +46,8 @@ GLYPHS = [
               "of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast."),
     dict(cls=5, item=1630110, glyph=16301, aura=1630050, name="Glyph of the Bound Fiend", file="zz_moonlit_primeglyph_23_bound_fiend_glyph.sql",
          text="You keep a permanent Shadowfiend that hits 30% harder, and your Shadow talents feed it. The Shadowfiend no longer returns mana, and you lose the Shadowfiend spell."),
+    dict(cls=6, item=1130140, glyph=11301, aura=1130120, name="Glyph of the Tomb Necromancer", file="zz_moonlit_primeglyph_37_tomb_necromancer_glyph.sql",
+         text="You stand back with a staff while a permanent Skeleton Archer fights for you. Your auto attack is Plague Slash, Plague Strike and Scourge Strike reach 30 yards, and Intellect gives attack power."),
     dict(cls=6, item=1110170, glyph=11101, aura=1110120, name="Glyph of the Bloodcaller", file="zz_moonlit_primeglyph_35_bloodcaller_glyph.sql",
          text="A permanent Blood Beast fights beside you and casts a strike of its own with every Heart Strike, Blood Strike and Blood Boil you cast. One Blood Rune stays bound to it."),
     dict(cls=6, item=1110180, glyph=11102, aura=1110130, name="Glyph of the Sanguine Mender", file="zz_moonlit_primeglyph_36_sanguine_mender_glyph.sql",
