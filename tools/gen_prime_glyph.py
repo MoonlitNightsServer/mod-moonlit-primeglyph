@@ -46,6 +46,12 @@ GLYPHS = [
               "of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast."),
     dict(cls=5, item=1630110, glyph=16301, aura=1630050, name="Glyph of the Bound Fiend", file="zz_moonlit_primeglyph_23_bound_fiend_glyph.sql",
          text="You keep a permanent Shadowfiend that hits 30% harder, and your Shadow talents feed it. The Shadowfiend no longer returns mana, and you lose the Shadowfiend spell."),
+    dict(cls=6, item=1140250, glyph=11405, aura=1140190, name="Glyph of the Bloodforged Bulwark", file="zz_moonlit_primeglyph_26_bloodforged_bulwark_glyph.sql",
+         text="Death Strike no longer heals you. It forges an over-shield from the damage you took in the last 5 seconds, and Improved Death Strike makes that shield larger."),
+    dict(cls=6, item=1140270, glyph=11407, aura=1140200, name="Glyph of the Frozen Bastion", file="zz_moonlit_primeglyph_27_frozen_bastion_glyph.sql",
+         text="Rune Strike needs no dodge or parry and gives a stack of Frozen Plate. Toughness makes each stack stronger and Anticipation turns the stacks into dodge."),
+    dict(cls=6, item=1140220, glyph=11402, aura=1140230, name="Glyph of the Unbroken Bones", file="zz_moonlit_primeglyph_25_unbroken_bones_glyph.sql",
+         text="Bone Shield no longer raises your damage done, and every Plague Strike or Scourge Strike adds one bone to it, up to the most it can hold."),
     dict(cls=8, item=1420140, glyph=14201, aura=1420060, name="Glyph of the Cauterizer", file="zz_moonlit_primeglyph_24_cauterizer_glyph.sql",
          text="Your damage is 50% lower, but your Fire damage heals the ally with the lowest health in your group for 75% of your normal damage, and you learn Cauterize, "
               "Phoenix Flame, Hearth Fire and Ember Ward."),
