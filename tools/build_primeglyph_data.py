@@ -49,6 +49,8 @@ MANUAL_KITS = {
 # The Glyph of the Strider (hunter): the Snaremaster, the Melee Companion, the Boons that make the melee hunter work, Strider Kick and the price; Scatter Shot and Explosive Shot are replaced.
 MANUAL_KITS[1330250] = ([1330090, 1310090, 1330110, 1330120, 1330140, 1330183, 1330210, 1330260, 1330270, 1330320],
                         [19503, 53301, 60051, 60052, 60053])
+# The Glyph of the Gladiator (warrior): the Gladiator Stance and Shield Crash teachers; Battle, Defensive and Berserker Stance, Shield Wall and the tank baseline are taken away.
+MANUAL_KITS[2030070] = ([2030090, 2030110], [71, 2457, 2458, 871, 2040010])
 FAVOR_RE = re.compile(r"removes = \{([^}]*)\},\s*auras = \{([^}]*)\}")
 
 

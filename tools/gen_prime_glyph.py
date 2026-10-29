@@ -46,6 +46,8 @@ GLYPHS = [
               "of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast."),
     dict(cls=5, item=1630110, glyph=16301, aura=1630050, name="Glyph of the Bound Fiend", file="zz_moonlit_primeglyph_23_bound_fiend_glyph.sql",
          text="You keep a permanent Shadowfiend that hits 30% harder, and your Shadow talents feed it. The Shadowfiend no longer returns mana, and you lose the Shadowfiend spell."),
+    dict(cls=1, item=2030070, glyph=20301, aura=2030060, name="Glyph of the Gladiator", file="zz_moonlit_primeglyph_40_gladiator_glyph.sql",
+         text="You fight behind a shield to kill. Gladiator Stance replaces Battle, Defensive and Berserker Stance, Shield Crash replaces Shield Wall, and blocks, parries and dodges feed your offence."),
     dict(cls=3, item=1330250, glyph=13301, aura=1330080, name="Glyph of the Strider", file="zz_moonlit_primeglyph_39_strider_glyph.sql",
          text="You fight in melee with any two-handed weapon beside your pet. Strider Kick and Flanking Strike replace Scatter Shot and Explosive Shot, your bleeds are short and your shots cost more mana."),
     dict(cls=11, item=1210060, glyph=12101, aura=1210050, name="Glyph of the Moonbow", file="zz_moonlit_primeglyph_38_moonbow_glyph.sql",
