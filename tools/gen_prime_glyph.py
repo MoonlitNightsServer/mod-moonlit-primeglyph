@@ -46,6 +46,8 @@ GLYPHS = [
               "of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast."),
     dict(cls=5, item=1630110, glyph=16301, aura=1630050, name="Glyph of the Bound Fiend", file="zz_moonlit_primeglyph_23_bound_fiend_glyph.sql",
          text="You keep a permanent Shadowfiend that hits 30% harder, and your Shadow talents feed it. The Shadowfiend no longer returns mana, and you lose the Shadowfiend spell."),
+    dict(cls=11, item=1220100, glyph=12201, aura=1220090, name="Glyph of the Pack Hunting", file="zz_moonlit_primeglyph_32_pack_hunting_glyph.sql",
+         text="A companion of the hunter pet system fights beside you in Cat Form. You and it deal more damage while close together, and your Mangle and Rake bleeds are weaker."),
     dict(cls=7, item=1820180, glyph=18202, aura=1820070, name="Glyph of the Greatsword", file="zz_moonlit_primeglyph_31_greatsword_glyph.sql",
          text="You fight with one big two-handed weapon: Stormstrike and Windfury hit harder the slower the weapon, Earth Slam replaces Lava Lash, and the off-hand slot stays empty."),
     dict(cls=7, item=1820110, glyph=18201, aura=1820080, name="Glyph of the Spirit Healer", file="zz_moonlit_primeglyph_30_spirit_healer_glyph.sql",
