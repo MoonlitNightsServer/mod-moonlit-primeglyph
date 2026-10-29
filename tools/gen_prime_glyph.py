@@ -9,6 +9,7 @@ Writes one data/sql/db-world/zz_moonlit_primeglyph_<n>_*.sql per glyph. Four rec
   item_template        <id>   Glyph of Smite (42416) cloned, renamed, use spell <id>, RequiredLevel 1
 
   Atonement      priest block 1,610,000: item and installer 1,610,020, GlyphProperties 16,100, aura 1,610,010 (zz_..._20_atonement_glyph.sql)
+  Cauterizer     mage fire block 1,420,000: item and installer 1,420,140, GlyphProperties 14,201, aura 1,420,060 (zz_..._24_cauterizer_glyph.sql)
   Spellstriker   mage block 1,440,100 (Spellblade recipes): item and installer 1,440,290, GlyphProperties 14,401, aura 1,440,270 (zz_..._22_spellstriker_glyph.sql)
   Void Lasher    priest block 1,630,000: item and installer 1,630,100, GlyphProperties 16,300, aura 1,630,070 (zz_..._21_void_lasher_glyph.sql)
                  (the glyph also needs the wand passive 1,630,080 and the loss of Mind Flay and Mind Sear: those come from the Favor data, see
@@ -45,6 +46,9 @@ GLYPHS = [
               "of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast."),
     dict(cls=5, item=1630110, glyph=16301, aura=1630050, name="Glyph of the Bound Fiend", file="zz_moonlit_primeglyph_23_bound_fiend_glyph.sql",
          text="You keep a permanent Shadowfiend that hits 30% harder, and your Shadow talents feed it. The Shadowfiend no longer returns mana, and you lose the Shadowfiend spell."),
+    dict(cls=8, item=1420140, glyph=14201, aura=1420060, name="Glyph of the Cauterizer", file="zz_moonlit_primeglyph_24_cauterizer_glyph.sql",
+         text="Your damage is 50% lower, but your Fire damage heals the ally with the lowest health in your group for 75% of your normal damage, and you learn Cauterize, "
+              "Phoenix Flame, Hearth Fire and Ember Ward."),
     dict(cls=8, item=1440290, glyph=14401, aura=1440270, name="Glyph of the Spellstriker", file="zz_moonlit_primeglyph_22_spellstriker_glyph.sql",
          text="You fight in melee: Arcane Blast and Arcane Missiles become weapon and uninterruptible versions, you call melee Mirror Images, and Intellect gives 2 attack power each. You lose Mana Ward."),
 ]
