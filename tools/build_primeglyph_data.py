@@ -46,6 +46,9 @@ MANUAL_KITS = {
                14914, 15262, 15263, 15264, 15265, 15266, 15267, 15261, 25384, 48134, 48135,                                # Holy Fire
                47788]),                                                                                                    # Guardian Spirit
 }
+# The Glyph of the Strider (hunter): the Snaremaster, the Melee Companion, the Boons that make the melee hunter work, Strider Kick and the price; Scatter Shot and Explosive Shot are replaced.
+MANUAL_KITS[1330250] = ([1330090, 1310090, 1330110, 1330120, 1330140, 1330183, 1330210, 1330260, 1330270, 1330320],
+                        [19503, 53301, 60051, 60052, 60053])
 FAVOR_RE = re.compile(r"removes = \{([^}]*)\},\s*auras = \{([^}]*)\}")
 
 
