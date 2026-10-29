@@ -46,6 +46,8 @@ GLYPHS = [
               "of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast."),
     dict(cls=5, item=1630110, glyph=16301, aura=1630050, name="Glyph of the Bound Fiend", file="zz_moonlit_primeglyph_23_bound_fiend_glyph.sql",
          text="You keep a permanent Shadowfiend that hits 30% harder, and your Shadow talents feed it. The Shadowfiend no longer returns mana, and you lose the Shadowfiend spell."),
+    dict(cls=7, item=1820180, glyph=18202, aura=1820070, name="Glyph of the Greatsword", file="zz_moonlit_primeglyph_31_greatsword_glyph.sql",
+         text="You fight with one big two-handed weapon: Stormstrike and Windfury hit harder the slower the weapon, Earth Slam replaces Lava Lash, and the off-hand slot stays empty."),
     dict(cls=7, item=1820110, glyph=18201, aura=1820080, name="Glyph of the Spirit Healer", file="zz_moonlit_primeglyph_30_spirit_healer_glyph.sql",
          text="You deal 50% less damage, but your weapon strikes heal the group member with the lowest health for 85% of your normal damage, and your Spirit Wolves heal too."),
     dict(cls=2, item=1530150, glyph=15301, aura=1530140, name="Glyph of the Dual Verdict", file="zz_moonlit_primeglyph_29_dual_verdict_glyph.sql",
