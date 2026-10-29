@@ -37,6 +37,15 @@ EXCLUDED_CLASSES = {}        # 2026-10-26: Blessings are off, every class gets t
 APPLY_GLYPH = 74
 OUT = ROOT / "lua_scripts" / "primeglyph" / "primeglyph_data.lua"
 BLESSINGS_DATA = ROOT / "lua_scripts" / "moonlit_blessings" / "data.lua"
+# Glyphs whose kit is not a Blessing Favor: glyph item -> (extra auras, stock spells removed while it is slotted). The Glyph of the Martyr carries the whole Martyr kit: the Eternal Aegis
+# mantle (1640012), a teacher aura for each spell of the kit (recipes/martyr.py) and the loss of Smite, Holy Nova, Holy Fire and Guardian Spirit.
+MANUAL_KITS = {
+    1640390: ([1640012, 1640400, 1640410, 1640420, 1640430, 1640440, 1640450],
+              [585, 591, 598, 984, 1004, 6060, 10933, 10934, 25363, 25364, 48122, 48123,                                 # Smite
+               15237, 15430, 15431, 27799, 27800, 27801, 25331, 48077, 48078,                                              # Holy Nova
+               14914, 15262, 15263, 15264, 15265, 15266, 15267, 15261, 25384, 48134, 48135,                                # Holy Fire
+               47788]),                                                                                                    # Guardian Spirit
+}
 FAVOR_RE = re.compile(r"removes = \{([^}]*)\},\s*auras = \{([^}]*)\}")
 
 
@@ -97,7 +106,7 @@ def main():
     ]
     for e, g, spell, cls, gtype, name, use, icon in sorted(out):
         kind = {1: ", minor = true", 2: ", prime = true"}.get(gtype, "")
-        extra, removes = fav.get(spell, ([], []))
+        extra, removes = MANUAL_KITS.get(e, fav.get(spell, ([], [])))
         kit = (f", extra = {{ {', '.join(map(str, extra))} }}" if extra else "") + (f", removes = {{ {', '.join(map(str, removes))} }}" if removes else "")
         lines.append(f"  [{e}] = {{ glyph = {g}, spell = {spell}, use = {use}, class = {cls}{kind}{kit}, icon = {lua_str(icon)}, name = {lua_str(name)} }},")
     lines += [

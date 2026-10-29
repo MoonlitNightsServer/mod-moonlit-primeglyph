@@ -46,6 +46,8 @@ GLYPHS = [
               "of the Old Gods that lashes nearby enemies. Mind Blast makes every tentacle lash again. Wand hits may reset Mind Blast."),
     dict(cls=5, item=1630110, glyph=16301, aura=1630050, name="Glyph of the Bound Fiend", file="zz_moonlit_primeglyph_23_bound_fiend_glyph.sql",
          text="You keep a permanent Shadowfiend that hits 30% harder, and your Shadow talents feed it. The Shadowfiend no longer returns mana, and you lose the Shadowfiend spell."),
+    dict(cls=5, item=1640390, glyph=16401, aura=1640010, name="Glyph of the Martyr", file="zz_moonlit_primeglyph_34_martyr_glyph.sql",
+         text="You become a cloth-wearing melee tank: a shield that refills itself, a taunt, and Sanctified Blow, Righteous Cleave and Burning Strike in place of Smite, Holy Nova and Holy Fire."),
     dict(cls=9, item=1920150, glyph=19201, aura=1920110, name="Glyph of the Felguard Form", file="zz_moonlit_primeglyph_33_felguard_form_glyph.sql",
          text="You take the shape of your Felguard and fight in melee while still casting, with no demon at your side. Your Demonology talents empower you, and your spell damage is 30% lower."),
     dict(cls=11, item=1220100, glyph=12201, aura=1220090, name="Glyph of the Pack Hunting", file="zz_moonlit_primeglyph_32_pack_hunting_glyph.sql",
